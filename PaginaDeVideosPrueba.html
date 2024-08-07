@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .video-container video {
+            width: 60%;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="primervideo" src="Video1.mp4" muted  ></video>
+        <video id="segundovideo" src="Video2.mp4" muted ></video>
+        <video id="tercervideo" src="Video3.mp4" muted  ></video>
+    </div>
+
+    <div class="button-container">
+        <button onclick="playVideo('primervideo')">Reproducir Video 1</button>
+        <button onclick="playVideo('segundovideo')">Reproducir Video 2</button>
+        <button onclick="playVideo('tercervideo')">Reproducir Video 3</button>
+    </div>
+
+    <script>
+        // Pausar todos los videos
+        function pauseAllVideos() {
+            document.querySelectorAll('video').forEach(video => video.pause());
+        }
+
+        // Reproducir el video seleccionado y guardar el estado en LocalStorage
+        function playVideo(videoId) {
+            pauseAllVideos();
+
+            const video = document.getElementById(videoId);
+            video.play();
+
+            // Guardar el ID del video actual en LocalStorage
+            localStorage.setItem('currentVideo', videoId);
+        }
+
+        // Recuperar el estado del video desde LocalStorage al cargar la página
+        window.onload = function() {
+            const currentVideoId = localStorage.getItem('currentVideo');
+
+            if (currentVideoId) {
+                const video = document.getElementById(currentVideoId);
+
+                // Intentar reproducir el video guardado automáticamente
+                if (video) {
+                    video.play().catch(error => {
+                        console.log("La reproducción automática del video principal fue bloqueada. Requiere interacción del usuario.");
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
