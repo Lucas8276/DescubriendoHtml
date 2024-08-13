@@ -5,50 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        /* Estilo para el video de fondo */
+        #backgroundVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Ajuste de estilo para centrar el contenido */
         .video-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin: 20px;
-        }
-
-        .video-container video {
-            width: 60%;
-            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            color: white;
         }
 
         .button-container {
             display: flex;
             justify-content: center;
             gap: 10px;
+            position: relative;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
+    <!-- Video de fondo -->
+    <video id="backgroundVideo" muted autoplay loop></video>
+
     <div class="video-container">
-        <video id="primervideo" src="Video1.mp4" muted  ></video>
-        <video id="segundovideo" src="Video2.mp4" muted ></video>
-        <video id="tercervideo" src="Video3.mp4" muted  ></video>
+        <video id="primervideo" src="Video1.mp4" muted style="display: none;"></video>
+        <video id="segundovideo" src="Video2.mp4" muted style="display: none;"></video>
+        <video id="tercervideo" src="Video3.mp4" muted style="display: none;"></video>
     </div>
 
     <div class="button-container">
-        <button onclick="playVideo('primervideo')">Reproducir Video 1</button>
-        <button onclick="playVideo('segundovideo')">Reproducir Video 2</button>
-        <button onclick="playVideo('tercervideo')">Reproducir Video 3</button>
+        <button onclick="changeBackground('primervideo')">Reproducir Video 1</button>
+        <button onclick="changeBackground('segundovideo')">Reproducir Video 2</button>
+        <button onclick="changeBackground('tercervideo')">Reproducir Video 3</button>
     </div>
 
     <script>
-        // Pausar todos los videos
-        function pauseAllVideos() {
-            document.querySelectorAll('video').forEach(video => video.pause());
-        }
+        // Función para cambiar el video de fondo
+        function changeBackground(videoId) {
+            const videoElement = document.getElementById(videoId);
+            const backgroundVideo = document.getElementById('backgroundVideo');
 
-        // Reproducir el video seleccionado y guardar el estado en LocalStorage
-        function playVideo(videoId) {
-            pauseAllVideos();
-
-            const video = document.getElementById(videoId);
-            video.play();
+            backgroundVideo.src = videoElement.src;
+            backgroundVideo.play();
 
             // Guardar el ID del video actual en LocalStorage
             localStorage.setItem('currentVideo', videoId);
@@ -59,14 +70,10 @@
             const currentVideoId = localStorage.getItem('currentVideo');
 
             if (currentVideoId) {
-                const video = document.getElementById(currentVideoId);
-
-                // Intentar reproducir el video guardado automáticamente
-                if (video) {
-                    video.play().catch(error => {
-                        console.log("La reproducción automática del video principal fue bloqueada. Requiere interacción del usuario.");
-                    });
-                }
+                changeBackground(currentVideoId);
+            } else {
+                // Si no hay video guardado, iniciar con el primer video
+                changeBackground('primervideo');
             }
         }
     </script>
